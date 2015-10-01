@@ -1,18 +1,51 @@
 import React, { PropTypes as T } from 'react';
-import { Accordion, Panel, Glyphicon } from 'react-bootstrap';
+import { Accordion, Panel, Glyphicon, Input, Well } from 'react-bootstrap';
 import ComponentFactory from '../ComponentFactory.jsx';
+
+const Styles = {
+    main: {
+        padding: 10,
+        marginTop: 10,
+        position: 'relative',
+        borderBottom: '1px solid white'
+    },
+    get over () {
+        return { ...this.main,
+            borderBottom: '1px solid #f5f5f5',
+            backgroundColor: '#f5f5f5'
+        }
+    },
+    get deleted () {
+        return { ...this.main, backgroundColor: '#EF9A9A' }
+    },
+    settings: {
+        backgroundColor: '#f5f5f5'
+    },
+    toolbar: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        color: '#f5f5f5',
+        cursor: 'pointer'
+    },
+    get toolbarOver () { return {...this.toolbar, color: 'black'} }
+}
 
 
 export default class ComponentInspector extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { areSettingsVisible: false };
+        this.state = {
+            areSettingsVisible: false,
+            over: false,
+            componentData: { ...props.component }
+        };
     }
 
     static propTypes = {
         name: T.string,
-        componentProps: T.object
+        componentData: T.object
     };
 
     toggleSettings = () => {
@@ -20,15 +53,40 @@ export default class ComponentInspector extends React.Component {
     }
 
     removeComponent = () => {
-        console.log(this.props)
-        this.props.removeComponent(this.props.index)
+        this.setState(
+            { deleted: true },
+            () => {
+                setTimeout(() => {
+                    this.props.removeComponent(this.props.index) },
+                    300)
+            }
+        )
+
     }
 
+    handlePropChange = (prop, event) => {
+        const newState = { ...this.state };
+        newState.componentData.componentProps[prop] = event.target.value;
+        this.setState({ newState })
+    }
+
+    onMouseOver = (event) => { this.setState({ over: true }) }
+    onMouseOut = (event) => { this.setState({ over: false }) }
+
     render() {
+        const { over, areSettingsVisible, deleted } = this.state;
+        let style = Styles.main;
+        if (deleted) style = Styles.deleted;
+        else if (over || areSettingsVisible) style = Styles.over;
+
         return (
-            <div style={{ borderTop: '1px solid #ddd', paddingTop: 10, marginTop: 10, position: 'relative' }}>
-                <ComponentFactory {...this.props.component}/>
-                <div style={{ position: 'absolute', top: 5, right: 0 }}>
+            <div
+                style={style}
+                onMouseOver={this.onMouseOver}
+                onMouseOut={this.onMouseOut}
+            >
+                <ComponentFactory {...this.state.componentData}/>
+                <div style={over || areSettingsVisible ? Styles.toolbarOver : Styles.toolbar}>
                     <Glyphicon glyph="cog" onClick={this.toggleSettings} />
                     <Glyphicon glyph="trash" onClick={this.removeComponent} />
                 </div>
@@ -39,14 +97,24 @@ export default class ComponentInspector extends React.Component {
 
     renderSettings() {
         if (!this.state.areSettingsVisible) { return null; }
+        const props = this.props.component.componentProps;
+        const settings = Object.keys(props).map((prop, index) => {
+            return (
+                <div key={index}>
+                    <Input
+                        type="text"
+                        addonBefore={prop}
+                        bsSize="small"
+                        onChange={this.handlePropChange.bind(this, prop)}
+                        value={this.state.componentData.componentProps[prop]}
+                    />
+                </div>
+            );
+        });
         return (
-            <div style={{ backgroundColor: '#f5f5f5' }}>
-                <h4 style={{ margin: 0 }}><small>PROPERTIES</small></h4>
-                {
-                    Object.keys(this.props.component).map(prop => {
-                        return <div>{`${prop} ${this.props.component[prop]}`}</div>
-                    })
-                }
+            <div style={Styles.settings}>
+                <hr />
+                { settings }
             </div>
         );
     }

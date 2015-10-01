@@ -16,13 +16,13 @@ export default class UIBuilder extends React.Component {
         return (
             <Grid>
                 <Row>
-                    <Col md={2}>
-                        <ComponentPicker />
-                    </Col>
                     <Col md={6}>
                     </Col>
                     <Col md={4}>
                         <UIInspector components={components} />
+                    </Col>
+                    <Col md={2}>
+                        <ComponentPicker />
                     </Col>
                 </Row>
             </Grid>

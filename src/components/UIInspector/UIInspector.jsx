@@ -35,15 +35,15 @@ export default class UIInspector extends React.Component {
     }
 
     addComponent = (component) => {
-        const components = this.state.components.slice();
-        components.push(component);
-        this.setState({ components });
+        const newComponents = this.state.components.slice();
+        newComponents.push(component);
+        this.setState({ components: newComponents });
     }
 
     removeComponent = (index) => {
-        const components = this.state.components.slice();
-        components.splice(index, 1);
-        this.setState({ components });
+        const newComponents = this.state.components.slice();
+        newComponents.splice(index, 1);
+        this.setState({ components: newComponents });
     }
 
     render() {
@@ -52,7 +52,7 @@ export default class UIInspector extends React.Component {
         const inspectors = components.map((c, index) => {
             return <ComponentInspector
                 component={c}
-                key={index}
+                key={Math.random()}
                 index={index}
                 removeComponent={this.removeComponent}/>
         });
