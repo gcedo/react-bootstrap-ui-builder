@@ -4,7 +4,7 @@ import ComponentFactory from '../ComponentFactory.jsx';
 
 const Styles = {
     main: {
-        padding: 10,
+        padding: '30px 10px 10px 10px',
         marginTop: 10,
         position: 'relative',
         borderBottom: '1px solid white'
@@ -12,14 +12,14 @@ const Styles = {
     get over () {
         return { ...this.main,
             borderBottom: '1px solid #f5f5f5',
-            backgroundColor: '#f5f5f5'
+            backgroundColor: '#FBFBFB'
         }
     },
     get deleted () {
         return { ...this.main, backgroundColor: '#EF9A9A' }
     },
     settings: {
-        backgroundColor: '#f5f5f5'
+        backgroundColor: '#FBFBFB'
     },
     toolbar: {
         position: 'absolute',

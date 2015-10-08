@@ -6,8 +6,8 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 
 const components = [
-    { name: 'Button', componentProps: { bsStyle: 'primary' }, componentChildren: 'Button' },
-    { name: 'Input', componentProps: { type: 'select', label: 'Select' }, componentChildren: <option value="select">select</option>}
+    { name: 'Button', componentProps: { bsStyle: 'primary', bsSize: '', block: true }, componentChildren: 'Button' },
+    { name: 'Input', componentProps: { type: 'select', label: 'Select', disabled: true }, componentChildren: <option value="select">select</option>}
 ]
 
 @DragDropContext(HTML5Backend)
